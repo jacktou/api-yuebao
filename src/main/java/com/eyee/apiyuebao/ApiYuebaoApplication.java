@@ -17,7 +17,7 @@ public class ApiYuebaoApplication {
 	@RequestMapping("/api/test")
 	public String testDemo(){return "hello world";}
 
-	@RequestMapping("/api/say?{name}")
+	@RequestMapping("/api/say/{name}")
 	public String testSay(@PathVariable("name") String name){
 
 		return "hello:"+name;
