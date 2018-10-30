@@ -1,5 +1,7 @@
 package com.eyee.apiyuebao;
 
+import com.eyee.apiyuebao.model.ResponseBase;
+import com.eyee.apiyuebao.model.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,4 +25,13 @@ public class ApiYuebaoApplication {
 		return "hello:"+name;
 
 	}
+
+	@RequestMapping("/api/user/{id}")
+	public ResponseBase<User> getUser(@PathVariable("id") String id){
+
+		return ResponseBase.succeeded().setData(User.builder().id(id).bulid());
+	}
+
+
+
 }
