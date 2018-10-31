@@ -33,7 +33,7 @@ public class ApiYuebaoApplication {
 		return ResponseBase.succeeded().setData(User.builder().id(id).bulid());
 	}
 
-	@RequestMapping("/api/full/{id}")
+	@RequestMapping("/api/fullname/{id}")
 	public ResponseBase<User> getUserInfo(@PathVariable("id") String id, @RequestParam("name") String name){
 
 		return ResponseBase.succeeded().setData(User.builder().id(id).name(name).bulid());
