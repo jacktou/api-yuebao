@@ -10,7 +10,7 @@
 ext.versions = [
         springCloud : 'Finchley.RELEASE',
         spring      : '5.0.7.RELEASE',
-        springBoot  : '2.0.3.RELEASE',
+        springBoot  : '2.0.6.RELEASE',
 
         shiro       : '1.2.3',
         jackson     : '2.9.6',
@@ -198,5 +198,7 @@ ext.libraries = [
         "json"                    : "org.json:json:20160212",
         "ant"                    : "org.apache.ant:ant:1.8.2",
 
-        "poi"                    :"org.apache.poi:poi:4.0.0"
+        "poi"                    : "org.apache.poi:poi:4.0.0",
+
+        "lombok"                 : "org.projectlombok:lombok:1.16.16"
 ]

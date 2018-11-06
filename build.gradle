@@ -34,11 +34,11 @@ repositories {
 
 
 dependencies {
-	implementation('org.springframework.boot:spring-boot-starter-web')
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
-	compileOnly('org.projectlombok:lombok:1.16.16')
+
+
 	compile(
 
+			libraries.'spring-boot-web',
 
 			//for mysql
 			libraries.'HikariCP',
@@ -46,6 +46,10 @@ dependencies {
 			libraries.'mssql-jdbc',
 			libraries.'spring-boot-jpa',
 
+             //for lombok
+			libraries.'lombok',
+
+			libraries.'spring-boot-test',
 
 	)
 
