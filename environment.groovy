@@ -46,7 +46,7 @@ environments {
         }
 
         db {
-            url = "jdbc:mysql://rm-bp1lx810m6218roaz2o.mysql.rds.aliyuncs.com:3306/yuebao_local?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true"
+            url = "jdbc:mysql://rm-bp1lx810m6218roaz.mysql.rds.aliyuncs.com:3306/yuebao_local?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true"
             username = "eyee_test"
             password = "Eyee@934"
             driverClassName = "com.mysql.jdbc.Driver"
