@@ -45,7 +45,7 @@ public class ApiYuebaoApplication {
 	public ResponseBase<Ip> getIp(HttpServletRequest httpServletRequest ){
 
 		String ipAddress = httpServletRequest.getHeader("x-forwarded-for");
-		if(ipAddress!=null)
+		if(ipAddress==null)
 
 		    ipAddress=httpServletRequest.getRemoteAddr();
 
