@@ -2,6 +2,7 @@ package com.eyee.apiyuebao;
 
 import com.eyee.apiyuebao.model.ResponseBase;
 import com.eyee.apiyuebao.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
+@Slf4j
 public class ApiYuebaoApplication {
 
 	public static void main(String[] args) {
@@ -29,7 +31,7 @@ public class ApiYuebaoApplication {
 
 	@RequestMapping("/api/user/{id}")
 	public ResponseBase<User> getUser(@PathVariable("id") String id){
-
+        log.info("uuuuuuuuu");
 		return ResponseBase.succeeded().setData(User.builder().id(id).bulid());
 	}
 
