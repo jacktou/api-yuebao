@@ -8,6 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @SpringBootApplication
 @RestController
 @Slf4j
@@ -40,8 +42,10 @@ public class ApiYuebaoApplication {
 	}
 
 	@GetMapping("/api/ip")
-	public ResponseBase<Ip> getIp(){
-		return ResponseBase.succeeded().setData(new Ip("inner-network","127.0.0.1"));
+	public ResponseBase<Ip> getIp(HttpServletRequest httpServletRequest ){
+
+		String ipAddress = httpServletRequest.getHeader("x-forwarded-for");
+		return ResponseBase.succeeded().setData(new Ip("network",ipAddress));
 	}
 
 
