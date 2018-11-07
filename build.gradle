@@ -49,6 +49,8 @@ dependencies {
              //for lombok
 			libraries.'lombok',
 
+			libraries.'commons-lang3',
+
 			libraries.'spring-boot-test',
 
 	)

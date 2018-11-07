@@ -4,6 +4,7 @@ import com.eyee.apiyuebao.model.Ip;
 import com.eyee.apiyuebao.model.ResponseBase;
 import com.eyee.apiyuebao.model.User;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,7 @@ public class ApiYuebaoApplication {
 	public ResponseBase<Ip> getIp(HttpServletRequest httpServletRequest ){
 
 		String ipAddress = httpServletRequest.getHeader("x-forwarded-for");
-		if(ipAddress==null)
+		if(StringUtils.isBlank(ipAddress))
 
 		    ipAddress=httpServletRequest.getRemoteAddr();
 
