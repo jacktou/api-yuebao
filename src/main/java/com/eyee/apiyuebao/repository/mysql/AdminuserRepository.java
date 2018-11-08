@@ -43,5 +43,9 @@ public interface AdminuserRepository extends JpaRepository<Adminuser,Long>, JpaS
     );
 
 
+    @Query(value = "select * from adminuser WHERE isdel=0 and username= :username and userpwd= :userpwd limit 1 ",nativeQuery = true)
+    Optional<Adminuser> findByUsernameAndPwd(@Param(value = "username") String username,@Param(value = "userpwd") String userpwd);
+
+
 
 }

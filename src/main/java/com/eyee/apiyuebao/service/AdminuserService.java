@@ -2,10 +2,8 @@ package com.eyee.apiyuebao.service;
 
 import com.eyee.apiyuebao.constant.MsgCodeStatus;
 import com.eyee.apiyuebao.model.ResponseBase;
-import com.eyee.apiyuebao.request.AdminuserAddReq;
-import com.eyee.apiyuebao.request.AdminuserEditReq;
-import com.eyee.apiyuebao.request.AdminuserPageReq;
-import com.eyee.apiyuebao.request.IdReq;
+import com.eyee.apiyuebao.request.*;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 import javax.xml.ws.Response;
@@ -32,5 +30,7 @@ public interface AdminuserService {
     MsgCodeStatus checkMsgCode(String mobile, String code);
 
     ResponseBase pageList(AdminuserPageReq adminuserPageReq);
+
+    ResponseBase login(@RequestBody AdminuserLoginReq adminuserLoginReq);
 
 }

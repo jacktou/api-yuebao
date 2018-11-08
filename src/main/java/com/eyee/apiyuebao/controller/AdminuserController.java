@@ -66,6 +66,11 @@ public class AdminuserController {
     }
 
 
+    @PostMapping("open/login")
+    public ResponseBase login(@RequestBody AdminuserLoginReq adminuserLoginReq){
+        return adminuserService.login(adminuserLoginReq);
+    }
+
 
 
 

@@ -11,10 +11,7 @@ import com.eyee.apiyuebao.entity.mysql.Whitelist;
 import com.eyee.apiyuebao.model.ResponseBase;
 import com.eyee.apiyuebao.repository.mysql.AdminuserRepository;
 import com.eyee.apiyuebao.repository.mysql.CaptchaRepository;
-import com.eyee.apiyuebao.request.AdminuserAddReq;
-import com.eyee.apiyuebao.request.AdminuserEditReq;
-import com.eyee.apiyuebao.request.AdminuserPageReq;
-import com.eyee.apiyuebao.request.IdReq;
+import com.eyee.apiyuebao.request.*;
 import com.eyee.apiyuebao.service.AdminuserService;
 import com.eyee.apiyuebao.util.DH3T;
 import com.eyee.apiyuebao.util.DateUtil;
@@ -248,5 +245,40 @@ public class AdminuserServiceImp implements AdminuserService {
 
 
         return ResponseBase.succeeded().setData(data);
+    }
+
+    @Override
+    public ResponseBase login(AdminuserLoginReq adminuserLoginReq) {
+
+        MsgCodeStatus msgCodeStatus = checkMsgCode(adminuserLoginReq.getMobile(), adminuserLoginReq.getCode());
+        if(msgCodeStatus==MsgCodeStatus.NORMAL){
+            int result=0;
+
+            try {
+                Optional<Adminuser> byUsernameAndPwd = adminuserRepository.findByUsernameAndPwd(adminuserLoginReq.getUsername(), SecurityUtils.md5(adminuserLoginReq.getUserpwd()));
+                if(byUsernameAndPwd.isPresent()){
+                    result=1;
+                }
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            if(result==1){
+                return ResponseBase.succeeded().setMsg("login success");
+            }else{
+                return ResponseBase.failed(ApiCode.NOT_FOUND,"login faile check username or password");
+            }
+
+        }
+        if(msgCodeStatus==MsgCodeStatus.EXPIRE){
+
+            return  ResponseBase.failed(ApiCode.CAPTCHA_EXPIRE,"captcha expire");
+
+        }
+        if(msgCodeStatus==MsgCodeStatus.NONE){
+
+            return  ResponseBase.failed(ApiCode.NOT_FOUND,"captcha none");
+        }
+        return ResponseBase.succeeded();
+
     }
 }

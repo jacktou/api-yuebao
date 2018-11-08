@@ -22,6 +22,11 @@ environments {
 
         }
 
+        twitter{
+            snowflake_workerid=0
+            snowflake_datacenterid=0
+        }
+
         undertow{
             accessLogDirectory="../logs"
         }
@@ -54,6 +59,11 @@ environments {
 
         }
 
+        twitter{
+            snowflake_workerid=0
+            snowflake_datacenterid=0
+        }
+
         undertow{
             accessLogDirectory="../logs"
         }
@@ -84,6 +94,11 @@ environments {
 
         }
 
+        twitter{
+            snowflake_workerid=0
+            snowflake_datacenterid=0
+        }
+
         undertow{
             accessLogDirectory="../logs"
         }
@@ -112,6 +127,11 @@ environments {
             driverClassName = "com.mysql.jdbc.Driver"
 
 
+        }
+
+        twitter{
+            snowflake_workerid=0
+            snowflake_datacenterid=0
         }
 
         undertow{
