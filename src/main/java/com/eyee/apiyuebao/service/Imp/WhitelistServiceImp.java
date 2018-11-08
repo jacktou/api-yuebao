@@ -1,16 +1,26 @@
 package com.eyee.apiyuebao.service.Imp;
 
+import com.eyee.apiyuebao.dto.WhitelistDto;
 import com.eyee.apiyuebao.entity.mysql.Whitelist;
 import com.eyee.apiyuebao.model.ResponseBase;
 import com.eyee.apiyuebao.repository.mysql.WhitelistRepository;
 import com.eyee.apiyuebao.request.IpAddReq;
+import com.eyee.apiyuebao.request.IpPageReq;
 import com.eyee.apiyuebao.service.WhitelistService;
 import com.eyee.apiyuebao.util.DateUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import javax.persistence.criteria.*;
+import java.util.*;
 
 /**
  * Description:
@@ -31,6 +41,7 @@ public class WhitelistServiceImp implements WhitelistService {
         whitelist.setIp(ipAddReq.getIp());
         whitelist.setName(ipAddReq.getName());
         whitelist.setCreatedat(DateUtil.getNowDate());
+        whitelist.setCreator("test");
         return whitelistRepository.save(whitelist);
       }
 
@@ -69,5 +80,65 @@ public class WhitelistServiceImp implements WhitelistService {
             return 0;
 
         }
+    }
+
+    @Override
+    public Whitelist getByIp(String ip) {
+       return whitelistRepository.findByIp(ip).orElse(null);
+    }
+
+    @Override
+    public ResponseBase pageList(IpPageReq ipPageReq) {
+
+        Pageable pageable = PageRequest.of(ipPageReq.getPage()-1, ipPageReq.getSize(), Sort.Direction.DESC, "id");
+
+        Page<Whitelist> dataPage = whitelistRepository.findAll(
+                (Root<Whitelist> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+                    Path<String> ippath = root.get("ip");
+                    Path<String> namepath =root.get("name");
+                    Path<Date>   createdatpath =root.get("createdat");
+                    Path<Integer> isdelpath=root.get("isdel");
+                    List<Predicate> list = new ArrayList<Predicate>();
+                    list.add(cb.equal(isdelpath,0));
+
+                    if(StringUtils.isNotBlank(ipPageReq.getIp())) {
+                        list.add(cb.like(ippath,"%"+ipPageReq.getIp()+"%"));
+                    }
+                    if(StringUtils.isNotBlank(ipPageReq.getName())) {
+                        list.add(cb.like(namepath,"%"+ipPageReq.getName()+"%"));
+                    }
+
+                    if(StringUtils.isNotBlank(ipPageReq.getBegintime())&&StringUtils.isNotBlank((ipPageReq.getEndtime()))) {
+
+                        Date bdat=DateUtil.strToLongDate(ipPageReq.getBegintime())==null?DateUtil.strToShortDate(ipPageReq.getBegintime()):DateUtil.strToLongDate(ipPageReq.getBegintime());
+                        Date edat=DateUtil.strToLongDate(ipPageReq.getEndtime())==null?DateUtil.strToShortDate(ipPageReq.getEndtime()):DateUtil.strToLongDate(ipPageReq.getEndtime());
+                        list.add(cb.between(createdatpath,bdat,edat));
+
+                    }
+
+                    Predicate[] p = new Predicate[list.size()];
+                    return cb.and(list.toArray(p));
+
+
+                }, pageable);
+
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("page", ipPageReq.getPage());
+        data.put("size", ipPageReq.getSize());
+        data.put("total", dataPage.getTotalElements());
+
+        List<WhitelistDto> list=new ArrayList<>();
+        for(Whitelist item : dataPage.getContent()){
+
+            WhitelistDto whitelistDto=new WhitelistDto();
+            BeanUtils.copyProperties(item,whitelistDto);
+            list.add(whitelistDto);
+
+        }
+        data.put("list",list);
+
+
+        return ResponseBase.succeeded().setData(data);
     }
 }

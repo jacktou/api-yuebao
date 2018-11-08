@@ -7,6 +7,7 @@ import com.eyee.apiyuebao.model.ResponseBase;
 import com.eyee.apiyuebao.request.IdReq;
 import com.eyee.apiyuebao.request.IpAddReq;
 import com.eyee.apiyuebao.request.IpEditReq;
+import com.eyee.apiyuebao.request.IpPageReq;
 import com.eyee.apiyuebao.service.WhitelistService;
 import com.eyee.apiyuebao.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -93,10 +94,19 @@ public class WhitelistController {
     public ResponseBase updateIp(@RequestBody IpEditReq ipEditReq) {
 
 
+        Whitelist byIp = whitelistService.getByIp(ipEditReq.getIp());
+        if(byIp!=null)
+        {
+            if(byIp.getId()!=ipEditReq.getId())
+            {
+                return ResponseBase.failed(ApiCode.EXISTED, "update faile,ip same");
+            }
+        }
+
         Whitelist whitelist = new Whitelist();
         BeanUtils.copyProperties(ipEditReq, whitelist);
 
-        whitelist.setMender(1);
+        whitelist.setMender("test");
         whitelist.setUpdatedat(DateUtil.getNowDate());
 
         int ret = whitelistService.updateWhitelist(whitelist);
@@ -109,9 +119,15 @@ public class WhitelistController {
             return ResponseBase.failed(ApiCode.BAD_REQUEST, "update faile");
         }
 
+
+
     }
 
 
+    @PostMapping("page")
+    public ResponseBase pageList(@RequestBody IpPageReq ipPageReq){
+        return whitelistService.pageList(ipPageReq);
+    }
 
 
 

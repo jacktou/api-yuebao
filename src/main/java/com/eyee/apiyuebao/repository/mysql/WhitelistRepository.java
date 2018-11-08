@@ -2,6 +2,7 @@ package com.eyee.apiyuebao.repository.mysql;
 
 import com.eyee.apiyuebao.entity.mysql.Whitelist;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,7 +20,7 @@ import java.util.Optional;
  * Right: Copyright (c) 2018
  * Version: v1.0
  */
-public interface WhitelistRepository extends JpaRepository<Whitelist,Long> {
+public interface WhitelistRepository extends JpaRepository<Whitelist,Long>, JpaSpecificationExecutor<Whitelist> {
 
     @Query(value = "select * from whitelist WHERE isdel=0 and ip= :ip limit 1 ",nativeQuery = true)
     Optional<Whitelist> findByIp(@Param(value = "ip") String ip);
@@ -35,11 +36,11 @@ public interface WhitelistRepository extends JpaRepository<Whitelist,Long> {
 
     @Transactional
     @Modifying
-    @Query(value = " UPDATE  whitelist SET name= :name,ip= :ip, mender= :mender, updatedat= :updatedat where id= :id",nativeQuery = true)
+    @Query(value = " UPDATE  whitelist SET name= :name,ip= :ip, mender= :mender, updatedat= :updatedat where id= :id ",nativeQuery = true)
     int updateWhitelist(@Param(value = "id") long id,
                         @Param(value = "name") String name,
                         @Param(value = "ip") String ip,
-                        @Param(value = "mender") int mender,
+                        @Param(value = "mender") String mender,
                         @Param(value = "updatedat") Date updatedat
                         );
 

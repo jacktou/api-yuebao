@@ -7,18 +7,18 @@ import java.util.Date;
 /**
  * Description:
  * Author:jack
- * Date:下午2:32 2018/11/7
+ * Date:下午3:34 2018/11/8
  * Right: Copyright (c) 2018
  * Version: v1.0
  */
 @Data
-public class WhitelistDto {
+public class AdminuserDto {
 
     private long id;
 
-    private String name;
+    private String username;
 
-    private String ip;
+    private String mobile;
 
     private String creator;
 
@@ -27,7 +27,5 @@ public class WhitelistDto {
     private Date createdat;
 
     private Date updatedat;
-
-
 
 }

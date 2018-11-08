@@ -5,30 +5,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Description:
  * Author:jack
- * Date:下午8:08 2018/11/6
+ * Date:下午8:37 2018/11/7
  * Right: Copyright (c) 2018
  * Version: v1.0
  */
 @Entity
-@Table(name = "whitelist")
+@Table(name = "adminuser")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Whitelist {
+public class Adminuser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String name;
+    private String username;
 
-    private String ip;
+    private String userpwd;
+
+    private String mobile;
 
     private String creator;
 
@@ -40,5 +41,8 @@ public class Whitelist {
 
     private int isdel;
 
+    private String loginip;
+
+    private Date logintime;
 
 }

@@ -3,6 +3,7 @@ package com.eyee.apiyuebao.service;
 import com.eyee.apiyuebao.entity.mysql.Whitelist;
 import com.eyee.apiyuebao.model.ResponseBase;
 import com.eyee.apiyuebao.request.IpAddReq;
+import com.eyee.apiyuebao.request.IpPageReq;
 
 import java.util.List;
 
@@ -26,6 +27,10 @@ public interface WhitelistService {
    Whitelist getWhitelist(long id);
 
    int updateWhitelist(Whitelist whitelist);
+
+   Whitelist getByIp(String ip);
+
+   ResponseBase pageList(IpPageReq ipPageReq);
 
 
 }
