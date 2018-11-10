@@ -13,10 +13,7 @@ import com.eyee.apiyuebao.repository.mysql.AdminuserRepository;
 import com.eyee.apiyuebao.repository.mysql.CaptchaRepository;
 import com.eyee.apiyuebao.request.*;
 import com.eyee.apiyuebao.service.AdminuserService;
-import com.eyee.apiyuebao.util.DH3T;
-import com.eyee.apiyuebao.util.DateUtil;
-import com.eyee.apiyuebao.util.RandonNumberUtils;
-import com.eyee.apiyuebao.util.SecurityUtils;
+import com.eyee.apiyuebao.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
+import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -248,7 +246,7 @@ public class AdminuserServiceImp implements AdminuserService {
     }
 
     @Override
-    public ResponseBase login(AdminuserLoginReq adminuserLoginReq) {
+    public ResponseBase login(AdminuserLoginReq adminuserLoginReq, HttpServletRequest httpServletRequest) {
 
         MsgCodeStatus msgCodeStatus = checkMsgCode(adminuserLoginReq.getMobile(), adminuserLoginReq.getCode());
         if(msgCodeStatus==MsgCodeStatus.NORMAL){
@@ -258,11 +256,16 @@ public class AdminuserServiceImp implements AdminuserService {
                 Optional<Adminuser> byUsernameAndPwd = adminuserRepository.findByUsernameAndPwd(adminuserLoginReq.getUsername(), SecurityUtils.md5(adminuserLoginReq.getUserpwd()));
                 if(byUsernameAndPwd.isPresent()){
                     result=1;
+                    //update loginip and logintime
+                   String ip= IpUtil.getIpAddr(httpServletRequest);
+                   adminuserRepository.updateAdminuserlogin(byUsernameAndPwd.get().getId(),ip,DateUtil.getNowDate());
+
                 }
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
             if(result==1){
+
                 return ResponseBase.succeeded().setMsg("login success");
             }else{
                 return ResponseBase.failed(ApiCode.NOT_FOUND,"login faile check username or password");

@@ -6,6 +6,7 @@ import com.eyee.apiyuebao.request.*;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.Response;
 
 /**
@@ -31,6 +32,6 @@ public interface AdminuserService {
 
     ResponseBase pageList(AdminuserPageReq adminuserPageReq);
 
-    ResponseBase login(@RequestBody AdminuserLoginReq adminuserLoginReq);
+    ResponseBase login(@RequestBody AdminuserLoginReq adminuserLoginReq, HttpServletRequest httpServletRequest);
 
 }

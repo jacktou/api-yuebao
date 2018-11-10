@@ -32,6 +32,13 @@ public interface AdminuserRepository extends JpaRepository<Adminuser,Long>, JpaS
     int deleteAdminuser(@Param(value = "id") long id);
 
 
+    @Transactional
+    @Modifying
+    @Query(value = " UPDATE  adminuser SET loginip= :loginip , logintime= :logintime  where id= :id",nativeQuery = true)
+    int updateAdminuserlogin(@Param(value = "id") long id,
+                             @Param(value = "loginip") String loginip,
+                             @Param(value = "logintime") Date logintime
+                             );
 
     @Transactional
     @Modifying

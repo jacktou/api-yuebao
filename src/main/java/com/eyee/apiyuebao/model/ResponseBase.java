@@ -62,7 +62,7 @@ public class ResponseBase<T> {
     public String toJsonFailed(){
 
         StringBuilder sb=new StringBuilder(100);
-        sb.append(String.format("{\"code\":%d,\"msg\":%s}",code,msg));
+        sb.append(String.format("{\"code\":%d,\"msg\":\"%s\"}",code,msg));
         return sb.toString();
 
     }

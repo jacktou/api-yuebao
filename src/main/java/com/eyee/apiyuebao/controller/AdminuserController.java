@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 /**
  * Description:
  * Author:jack
@@ -58,17 +61,17 @@ public class AdminuserController {
 
 
 
-    @GetMapping("open/sendmsg")
-    public ResponseBase sendMsg(@RequestParam("mobile") String mobile){
+    @PostMapping("open/sendmsg")
+    public ResponseBase sendMsg( @Valid @RequestBody CaptchaReq captchaReq ){
 
-      return adminuserService.sendMsg(mobile);
+      return adminuserService.sendMsg(captchaReq.getMobile());
 
     }
 
 
     @PostMapping("open/login")
-    public ResponseBase login(@RequestBody AdminuserLoginReq adminuserLoginReq){
-        return adminuserService.login(adminuserLoginReq);
+    public ResponseBase login(@RequestBody AdminuserLoginReq adminuserLoginReq, HttpServletRequest httpServletRequest){
+        return adminuserService.login(adminuserLoginReq,httpServletRequest);
     }
 
 

@@ -1,5 +1,6 @@
 package com.eyee.apiyuebao;
 
+import com.eyee.apiyuebao.filter.InterfaceFilter;
 import com.eyee.apiyuebao.model.Ip;
 import com.eyee.apiyuebao.model.ResponseBase;
 import com.eyee.apiyuebao.model.User;
@@ -7,8 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 
 @SpringBootApplication
@@ -52,9 +55,6 @@ public class ApiYuebaoApplication {
 
 		return ResponseBase.succeeded().setData(new Ip("network",ipAddress));
 	}
-
-
-
 
 
 }

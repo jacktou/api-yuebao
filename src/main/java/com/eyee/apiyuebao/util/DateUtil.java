@@ -28,7 +28,7 @@ public class DateUtil {
         try {
             return  formatter.parse(dateString);
         } catch (ParseException e) {
-            e.printStackTrace();
+
         }
         return null;
     }
@@ -40,7 +40,7 @@ public class DateUtil {
             return formatter.parse(str);
         } catch (ParseException e) {
 
-            e.printStackTrace();
+
             return null;
         }
     }
@@ -52,7 +52,7 @@ public class DateUtil {
             return formatter_short.parse(str);
         } catch (ParseException e) {
 
-            e.printStackTrace();
+
             return null;
         }
     }
