@@ -1,6 +1,7 @@
 package com.eyee.apiyuebao.service.Imp;
 
 import com.eyee.apiyuebao.dto.WhitelistDto;
+import com.eyee.apiyuebao.entity.mysql.Adminuser;
 import com.eyee.apiyuebao.entity.mysql.Whitelist;
 import com.eyee.apiyuebao.model.ResponseBase;
 import com.eyee.apiyuebao.repository.mysql.WhitelistRepository;
@@ -35,13 +36,13 @@ public class WhitelistServiceImp implements WhitelistService {
    @Autowired
    private WhitelistRepository whitelistRepository;
     @Override
-    public Whitelist addWhitelist(IpAddReq ipAddReq) {
+    public Whitelist addWhitelist(IpAddReq ipAddReq,Adminuser loginadminuser) {
 
         Whitelist whitelist=new Whitelist();
         whitelist.setIp(ipAddReq.getIp());
         whitelist.setName(ipAddReq.getName());
         whitelist.setCreatedat(DateUtil.getNowDate());
-        whitelist.setCreator("test");
+        whitelist.setCreator(loginadminuser.getUsername());
         return whitelistRepository.save(whitelist);
       }
 

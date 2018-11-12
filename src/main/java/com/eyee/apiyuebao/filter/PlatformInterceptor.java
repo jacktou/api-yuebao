@@ -24,6 +24,7 @@ import java.util.Map;
  * Date:上午11:22 2018/11/10
  * Right: Copyright (c) 2018
  * Version: v1.0
+ * https://blog.csdn.net/Angry_Mills/article/details/79456137
  */
 @Component
 @Slf4j
@@ -32,23 +33,8 @@ public class PlatformInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-       // ServletOutputStream out=response.getOutputStream();
-
-        if(request.getRequestURL().indexOf("/open")>-1){
-
-
-         //   System.out.println("====="+getRequestJson(request)+"=======");
-            System.out.println("==========================================1================================================");
-
-            return true;
-
-        }
-        else {
-            response.setContentType("application/json;charset=utf-8");
-            response.getWriter().write(ResponseBase.failed(ApiCode.UNAUTHORIZED, "User ID is required.").toJsonFailed());
-            return false;
-        }
-
+        System.out.println("==========================================preHandle================================================");
+        return true;
 
     }
 
@@ -61,7 +47,6 @@ public class PlatformInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         System.out.println("==========================================after================================================");
-
         HandlerMethod h=(HandlerMethod)handler;
         System.out.println(h.getMethod().getName());
     }

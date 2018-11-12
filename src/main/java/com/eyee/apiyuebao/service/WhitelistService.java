@@ -1,5 +1,6 @@
 package com.eyee.apiyuebao.service;
 
+import com.eyee.apiyuebao.entity.mysql.Adminuser;
 import com.eyee.apiyuebao.entity.mysql.Whitelist;
 import com.eyee.apiyuebao.model.ResponseBase;
 import com.eyee.apiyuebao.request.IpAddReq;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public interface WhitelistService {
 
-   Whitelist addWhitelist(IpAddReq ipAddReq);
+   Whitelist addWhitelist(IpAddReq ipAddReq,Adminuser loginadminuser);
 
    boolean isExists(String ip);
 

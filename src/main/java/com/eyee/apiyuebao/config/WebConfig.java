@@ -1,14 +1,10 @@
 package com.eyee.apiyuebao.config;
 
-import com.eyee.apiyuebao.filter.Interceptor;
+
 import com.eyee.apiyuebao.filter.PlatformInterceptor;
-import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -22,9 +18,8 @@ import java.util.List;
  * Version: v1.0
  * https://blog.csdn.net/Angry_Mills/article/details/79456137
  */
-@EnableWebMvc
+
 @Configuration
-@Component
 public class WebConfig  implements WebMvcConfigurer{
 
     @Autowired
@@ -36,12 +31,25 @@ public class WebConfig  implements WebMvcConfigurer{
 
         registry.addInterceptor(platformInterceptor).addPathPatterns("/**");
         //.excludePathPatterns("notify","/static/**");
-        WebMvcConfigurer.super.addInterceptors(registry);
+       // WebMvcConfigurer.super.addInterceptors(registry);
     }
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
 
+        //设置允许跨域的路径
+        registry.addMapping("/**")
+                //设置允许跨域请求的域名
+                .allowedOrigins("*")
+                //是否允许证书 不再默认开启
+                .allowCredentials(true)
+                //设置允许的方法
+                .allowedMethods("*")
+                //跨域允许时间
+                .maxAge(3600);
+    }
 
-/**
+    /**
  * 利用fastjson替换掉jackson，且解决中文乱码问题
  * @param converters
  */

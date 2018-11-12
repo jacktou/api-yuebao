@@ -2,6 +2,7 @@ package com.eyee.apiyuebao.controller;
 
 
 import com.eyee.apiyuebao.constant.ApiCode;
+import com.eyee.apiyuebao.entity.mysql.Adminuser;
 import com.eyee.apiyuebao.model.ResponseBase;
 import com.eyee.apiyuebao.request.*;
 import com.eyee.apiyuebao.service.AdminuserService;
@@ -28,9 +29,9 @@ public class AdminuserController {
     private AdminuserService adminuserService;
 
     @PostMapping("add")
-    public ResponseBase AddAdminuser(@RequestBody AdminuserAddReq adminuserAddReq){
+    public ResponseBase AddAdminuser(@RequestBody AdminuserAddReq adminuserAddReq, @RequestAttribute("Adminuser")Adminuser loginadminuser){
 
-       return adminuserService.addAdminuser(adminuserAddReq);
+       return adminuserService.addAdminuser(adminuserAddReq, loginadminuser);
     }
 
 
@@ -48,9 +49,9 @@ public class AdminuserController {
     }
 
     @PostMapping("updatepwd")
-    public ResponseBase updateAdminuserPwd(@RequestBody AdminuserEditReq adminuserEditReq){
+    public ResponseBase updateAdminuserPwd(@RequestBody AdminuserEditReq adminuserEditReq, @RequestAttribute("Adminuser")Adminuser loginadminuser){
 
-        return adminuserService.updateAdminuserPwd(adminuserEditReq);
+        return adminuserService.updateAdminuserPwd(adminuserEditReq,loginadminuser);
     }
 
 

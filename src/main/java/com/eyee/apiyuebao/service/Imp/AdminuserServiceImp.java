@@ -5,15 +5,18 @@ import com.eyee.apiyuebao.constant.MsgCodeStatus;
 import com.eyee.apiyuebao.constant.MsgTemplate;
 import com.eyee.apiyuebao.dto.AdminuserDto;
 import com.eyee.apiyuebao.dto.WhitelistDto;
+import com.eyee.apiyuebao.entity.mysql.Account;
 import com.eyee.apiyuebao.entity.mysql.Adminuser;
 import com.eyee.apiyuebao.entity.mysql.Captcha;
 import com.eyee.apiyuebao.entity.mysql.Whitelist;
 import com.eyee.apiyuebao.model.ResponseBase;
+import com.eyee.apiyuebao.repository.mysql.AccountRepository;
 import com.eyee.apiyuebao.repository.mysql.AdminuserRepository;
 import com.eyee.apiyuebao.repository.mysql.CaptchaRepository;
 import com.eyee.apiyuebao.request.*;
 import com.eyee.apiyuebao.service.AdminuserService;
 import com.eyee.apiyuebao.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,7 @@ import java.util.*;
  * Version: v1.0
  */
 @Service
+@Slf4j
 public class AdminuserServiceImp implements AdminuserService {
 
     @Autowired
@@ -44,23 +48,28 @@ public class AdminuserServiceImp implements AdminuserService {
     @Autowired
     private CaptchaRepository captchaRepository;
 
+    @Autowired
+    AccountRepository accountRepository;
+
     @Override
-    public ResponseBase addAdminuser(AdminuserAddReq adminuserAddReq) {
+    public ResponseBase addAdminuser(AdminuserAddReq adminuserAddReq,Adminuser loginadminuser) {
 
         Optional<Adminuser> byUsername = adminuserRepository.findByUsername(adminuserAddReq.getUsername());
         if(byUsername.isPresent()){
+            log.info(adminuserAddReq.toString()+"add faile, username already existed");
             return ResponseBase.failed(ApiCode.EXISTED,"add faile, username already existed");
         }else{
 
             Adminuser adminuser=new Adminuser();
             BeanUtils.copyProperties(adminuserAddReq,adminuser);
-            adminuser.setCreator("admin");
+            adminuser.setCreator(loginadminuser.getUsername());
             adminuser.setCreatedat(DateUtil.getNowDate());
 
             try {
                 adminuser.setUserpwd(SecurityUtils.md5(adminuser.getUserpwd()));
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+
+                log.error( e.getMessage(),e);
                 return ResponseBase.failed(ApiCode.EXISTED,"add faile, username already existed");
 
             }
@@ -69,6 +78,7 @@ public class AdminuserServiceImp implements AdminuserService {
                 return ResponseBase.succeeded();
             }else{
 
+                log.info(adminuserAddReq.toString()+"add faile");
                 return ResponseBase.failed(ApiCode.BAD_REQUEST, "add faile");
             }
 
@@ -134,14 +144,14 @@ public class AdminuserServiceImp implements AdminuserService {
     }
 
     @Override
-    public ResponseBase updateAdminuserPwd(AdminuserEditReq adminuserEditReq) {
+    public ResponseBase updateAdminuserPwd(AdminuserEditReq adminuserEditReq,Adminuser loginadminuser) {
 
 
         MsgCodeStatus msgCodeStatus = checkMsgCode(adminuserEditReq.getMobile(), adminuserEditReq.getCode());
         if(msgCodeStatus==MsgCodeStatus.NORMAL){
             int result=0;
             try {
-                 result= adminuserRepository.updateUserpwd(adminuserEditReq.getId(), SecurityUtils.md5(adminuserEditReq.getUserpwd()),"admin",DateUtil.getNowDate());
+                 result= adminuserRepository.updateUserpwd(adminuserEditReq.getId(), SecurityUtils.md5(adminuserEditReq.getUserpwd()),loginadminuser.getUsername(),DateUtil.getNowDate());
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
@@ -251,34 +261,43 @@ public class AdminuserServiceImp implements AdminuserService {
         MsgCodeStatus msgCodeStatus = checkMsgCode(adminuserLoginReq.getMobile(), adminuserLoginReq.getCode());
         if(msgCodeStatus==MsgCodeStatus.NORMAL){
             int result=0;
-
+            Map<String,Object> map=new HashMap<>();
             try {
                 Optional<Adminuser> byUsernameAndPwd = adminuserRepository.findByUsernameAndPwd(adminuserLoginReq.getUsername(), SecurityUtils.md5(adminuserLoginReq.getUserpwd()));
                 if(byUsernameAndPwd.isPresent()){
                     result=1;
+                    AdminuserDto adminuserDto=new AdminuserDto();
+                    BeanUtils.copyProperties(byUsernameAndPwd.get(),adminuserDto);
+                    map.put("user",adminuserDto);
+                    String token=JwtUtil.createJWT(byUsernameAndPwd.get());
+                    map.put("token",token);
                     //update loginip and logintime
                    String ip= IpUtil.getIpAddr(httpServletRequest);
                    adminuserRepository.updateAdminuserlogin(byUsernameAndPwd.get().getId(),ip,DateUtil.getNowDate());
 
+
                 }
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+               log.error(e.getMessage(),e);
             }
             if(result==1){
-
-                return ResponseBase.succeeded().setMsg("login success");
+                return ResponseBase.succeeded().setData(map);
             }else{
+
+                log.info(adminuserLoginReq.toString()+" login faile check username or password");
                 return ResponseBase.failed(ApiCode.NOT_FOUND,"login faile check username or password");
             }
 
         }
         if(msgCodeStatus==MsgCodeStatus.EXPIRE){
 
+            log.info(adminuserLoginReq.toString()+"captcha expire");
             return  ResponseBase.failed(ApiCode.CAPTCHA_EXPIRE,"captcha expire");
 
         }
         if(msgCodeStatus==MsgCodeStatus.NONE){
 
+            log.info(adminuserLoginReq.toString()+"captcha none");
             return  ResponseBase.failed(ApiCode.NOT_FOUND,"captcha none");
         }
         return ResponseBase.succeeded();

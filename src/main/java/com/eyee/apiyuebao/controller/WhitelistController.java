@@ -2,6 +2,7 @@ package com.eyee.apiyuebao.controller;
 
 import com.eyee.apiyuebao.constant.ApiCode;
 import com.eyee.apiyuebao.dto.WhitelistDto;
+import com.eyee.apiyuebao.entity.mysql.Adminuser;
 import com.eyee.apiyuebao.entity.mysql.Whitelist;
 import com.eyee.apiyuebao.model.ResponseBase;
 import com.eyee.apiyuebao.request.IdReq;
@@ -13,10 +14,7 @@ import com.eyee.apiyuebao.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,11 +35,11 @@ public class WhitelistController {
     private WhitelistService whitelistService;
 
     @PostMapping("add")
-    public ResponseBase AddIp(@RequestBody IpAddReq ipAddReq){
+    public ResponseBase AddIp(@RequestBody IpAddReq ipAddReq, @RequestAttribute("Adminuser")Adminuser loginadminuser){
 
        if(!whitelistService.isExists(ipAddReq.getIp())) {
 
-           Whitelist whitelist = whitelistService.addWhitelist(ipAddReq);
+           Whitelist whitelist = whitelistService.addWhitelist(ipAddReq,loginadminuser);
            if (whitelist != null) {
                return ResponseBase.succeeded();
            } else {

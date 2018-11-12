@@ -54,7 +54,9 @@ dependencies {
 			libraries.'spring-boot-test',
 
 			libraries.'fastjson',
-			libraries.'commons-io'
+			libraries.'commons-io',
+			libraries.'jjwt',
+			libraries.'jwt'
 
 	)
 

@@ -25,6 +25,8 @@ public class ApiCode {
 
     public final static int EXISTED                 = 1511630;
 
+    public final static int EXPIRE                 = 1511631; //过期
+
     public final static int EXISTED_CASHMENT        = 1511635;//有未完成的转账记录
 
     public final static int HAS_CASHMENT            = 1511636;//重回提现
@@ -53,6 +55,11 @@ public class ApiCode {
     public  final static int NOT_LOGIN = 1511445; //未登录
 
 
+    public  final static int NO_AUTH_IP=1511446;  //未授权ip
+
+    public  final static  int NO_REQUEST_POST=1511447; //接口请求方法不是POST方式
+
+    public  final static int NO_SIGN=1511448;//签名不正确
 
 
 }

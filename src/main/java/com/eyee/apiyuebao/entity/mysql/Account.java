@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -15,14 +16,14 @@ import java.util.Date;
  * Right: Copyright (c) 2018
  * Version: v1.0
  */
-//@Entity
-//@Table(name = "account")
-//@Data
-//@AllArgsConstructor
-//@NoArgsConstructor
+@Entity
+@Table(name = "account")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Account {
-
-    private String useridnet;
+    @Id
+    private String id;
     private String username;
     private String mobile;
     private int balance;

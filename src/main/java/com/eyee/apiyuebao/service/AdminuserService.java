@@ -1,6 +1,7 @@
 package com.eyee.apiyuebao.service;
 
 import com.eyee.apiyuebao.constant.MsgCodeStatus;
+import com.eyee.apiyuebao.entity.mysql.Adminuser;
 import com.eyee.apiyuebao.model.ResponseBase;
 import com.eyee.apiyuebao.request.*;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,7 @@ import javax.xml.ws.Response;
  */
 public interface AdminuserService {
 
-    ResponseBase addAdminuser(AdminuserAddReq adminuserAddReq);
+    ResponseBase addAdminuser(AdminuserAddReq adminuserAddReq,Adminuser loginadminuser);
 
     ResponseBase sendMsg(String mobile);
 
@@ -26,7 +27,7 @@ public interface AdminuserService {
 
     ResponseBase getAdminuser(IdReq idReq);
 
-    ResponseBase updateAdminuserPwd(AdminuserEditReq adminuserEditReq);
+    ResponseBase updateAdminuserPwd(AdminuserEditReq adminuserEditReq,Adminuser loginadminuser);
 
     MsgCodeStatus checkMsgCode(String mobile, String code);
 
