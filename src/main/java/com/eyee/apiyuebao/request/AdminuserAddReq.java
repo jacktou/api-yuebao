@@ -20,5 +20,7 @@ public class AdminuserAddReq extends RequestBase {
 
     private String mobile;
 
+    private String code;
+
     private String userpwd;
 }

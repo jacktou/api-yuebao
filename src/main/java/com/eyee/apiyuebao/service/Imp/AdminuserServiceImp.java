@@ -54,37 +54,51 @@ public class AdminuserServiceImp implements AdminuserService {
     @Override
     public ResponseBase addAdminuser(AdminuserAddReq adminuserAddReq,Adminuser loginadminuser) {
 
-        Optional<Adminuser> byUsername = adminuserRepository.findByUsername(adminuserAddReq.getUsername());
-        if(byUsername.isPresent()){
-            log.info(adminuserAddReq.toString()+"add faile, username already existed");
-            return ResponseBase.failed(ApiCode.EXISTED,"add faile, username already existed");
-        }else{
+        MsgCodeStatus msgCodeStatus = checkMsgCode(adminuserAddReq.getMobile(), adminuserAddReq.getCode());
+        if(msgCodeStatus==MsgCodeStatus.NORMAL) {
+            Optional<Adminuser> byUsername = adminuserRepository.findByUsername(adminuserAddReq.getUsername());
+            if (byUsername.isPresent()) {
+                log.info(adminuserAddReq.toString() + "add faile, username already existed");
+                return ResponseBase.failed(ApiCode.EXISTED, "add faile, username already existed");
+            } else {
 
-            Adminuser adminuser=new Adminuser();
-            BeanUtils.copyProperties(adminuserAddReq,adminuser);
-            adminuser.setCreator(loginadminuser.getUsername());
-            adminuser.setCreatedat(DateUtil.getNowDate());
+                Adminuser adminuser = new Adminuser();
+                BeanUtils.copyProperties(adminuserAddReq, adminuser);
+                adminuser.setCreator(loginadminuser.getUsername());
+                adminuser.setCreatedat(DateUtil.getNowDate());
 
-            try {
-                adminuser.setUserpwd(SecurityUtils.md5(adminuser.getUserpwd()));
-            } catch (NoSuchAlgorithmException e) {
+                try {
+                    adminuser.setUserpwd(SecurityUtils.md5(adminuser.getUserpwd()));
+                } catch (NoSuchAlgorithmException e) {
 
-                log.error( e.getMessage(),e);
-                return ResponseBase.failed(ApiCode.EXISTED,"add faile, username already existed");
+                    log.error(e.getMessage(), e);
+                    return ResponseBase.failed(ApiCode.EXISTED, "add faile, username already existed");
+
+                }
+                Adminuser save = adminuserRepository.save(adminuser);
+                if (save != null) {
+                    return ResponseBase.succeeded();
+                } else {
+
+                    log.info(adminuserAddReq.toString() + "add faile");
+                    return ResponseBase.failed(ApiCode.BAD_REQUEST, "add faile");
+                }
+
 
             }
-            Adminuser save = adminuserRepository.save(adminuser);
-            if(save!=null){
-                return ResponseBase.succeeded();
-            }else{
+        }
+        else if(msgCodeStatus==MsgCodeStatus.EXPIRE){
 
-                log.info(adminuserAddReq.toString()+"add faile");
-                return ResponseBase.failed(ApiCode.BAD_REQUEST, "add faile");
-            }
-
-
+            log.info(adminuserAddReq.toString()+"captcha expire");
+            return  ResponseBase.failed(ApiCode.CAPTCHA_EXPIRE,"captcha expire");
 
         }
+        else if(msgCodeStatus==MsgCodeStatus.NONE){
+
+            log.info(adminuserAddReq.toString()+"captcha none");
+            return  ResponseBase.failed(ApiCode.NOT_FOUND,"captcha none");
+        }
+        return ResponseBase.succeeded();
     }
 
     @Override
