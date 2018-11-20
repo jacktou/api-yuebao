@@ -1,16 +1,22 @@
 package com.eyee.apiyuebao;
 
+import com.eyee.apiyuebao.filter.InterfaceFilter;
+import com.eyee.apiyuebao.model.Ip;
 import com.eyee.apiyuebao.model.ResponseBase;
 import com.eyee.apiyuebao.model.User;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.Filter;
+import javax.servlet.http.HttpServletRequest;
 
 @SpringBootApplication
 @RestController
+@Slf4j
 public class ApiYuebaoApplication {
 
 	public static void main(String[] args) {
@@ -29,7 +35,7 @@ public class ApiYuebaoApplication {
 
 	@RequestMapping("/api/user/{id}")
 	public ResponseBase<User> getUser(@PathVariable("id") String id){
-
+        log.info("uuuuuuuuu");
 		return ResponseBase.succeeded().setData(User.builder().id(id).bulid());
 	}
 
@@ -39,8 +45,17 @@ public class ApiYuebaoApplication {
 		return ResponseBase.succeeded().setData(User.builder().id(id).name(name).bulid());
 	}
 
+	@GetMapping("/api/ip")
+	public ResponseBase<Ip> getIp(HttpServletRequest httpServletRequest ){
 
+		String ipAddress = httpServletRequest.getHeader("x-forwarded-for");
+		if(StringUtils.isBlank(ipAddress)) {
 
+			ipAddress = httpServletRequest.getRemoteAddr();
+		}
+
+		return ResponseBase.succeeded().setData(new Ip("network",ipAddress));
+	}
 
 
 }

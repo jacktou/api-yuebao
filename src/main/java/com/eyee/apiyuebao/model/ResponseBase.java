@@ -1,5 +1,7 @@
 package com.eyee.apiyuebao.model;
 
+import com.eyee.apiyuebao.constant.ApiCode;
+
 /**
  * Description:
  * Author:jack
@@ -24,7 +26,7 @@ public class ResponseBase<T> {
         this.msg=msg;
     }
 
-    public static ResponseBase succeeded(){ return new ResponseBase(1511200,null,null);}
+    public static ResponseBase succeeded(){ return new ResponseBase(ApiCode.OK,null,null);}
 
     public static ResponseBase failed(int code,String msg){return new ResponseBase(code,null,msg);}
 
@@ -60,7 +62,7 @@ public class ResponseBase<T> {
     public String toJsonFailed(){
 
         StringBuilder sb=new StringBuilder(100);
-        sb.append(String.format("{\"code\":%d,\"msg\":%s}",code,msg));
+        sb.append(String.format("{\"code\":%d,\"msg\":\"%s\"}",code,msg));
         return sb.toString();
 
     }

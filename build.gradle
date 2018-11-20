@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 buildscript {
 	ext {
 		springBootVersion = '2.0.6.RELEASE'
@@ -10,14 +12,21 @@ buildscript {
 	}
 }
 
+apply from: "dependency.gradle"
 apply plugin: 'java'
-apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.eyee'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = 1.8
+
+jar {
+	baseName = 'api-yuebao'
+	version =  '1.0.0'
+
+}
 
 repositories {
 	mavenCentral()
@@ -25,6 +34,51 @@ repositories {
 
 
 dependencies {
-	implementation('org.springframework.boot:spring-boot-starter-web')
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
+
+
+	compile(
+
+			libraries.'spring-boot-web',
+
+			//for mysql
+			libraries.'HikariCP',
+			libraries.'mysql',
+			libraries.'mssql-jdbc',
+			libraries.'spring-boot-jpa',
+
+             //for lombok
+			libraries.'lombok',
+
+			libraries.'commons-lang3',
+
+			libraries.'spring-boot-test',
+
+			libraries.'fastjson',
+			libraries.'commons-io',
+			libraries.'jjwt',
+			libraries.'jwt',
+			libraries.'alipay-sdk-java'
+
+	)
+
+
+}
+
+def loadConfiguration() {
+	def environment = hasProperty('env') ? env : 'local'
+	project.ext.envrionment = environment
+	println "Environment is set to $environment"
+
+	def configFile = file('environment.groovy')
+	def config = new ConfigSlurper("$environment").parse(configFile.toURL())
+	project.ext.config = config
+	config.toProperties()
+}
+
+processResources {
+	from(sourceSets.main.resources.srcDirs) {
+		filter(ReplaceTokens,
+				tokens: loadConfiguration()
+		)
+	}
 }
