@@ -56,7 +56,8 @@ dependencies {
 			libraries.'fastjson',
 			libraries.'commons-io',
 			libraries.'jjwt',
-			libraries.'jwt'
+			libraries.'jwt',
+			libraries.'alipay-sdk-java'
 
 	)
 

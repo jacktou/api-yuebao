@@ -200,5 +200,7 @@ ext.libraries = [
 
         "poi"                    : "org.apache.poi:poi:4.0.0",
 
-        "lombok"                 : "org.projectlombok:lombok:1.16.16"
+        "lombok"                 : "org.projectlombok:lombok:1.16.16",
+        //alipay-sdk-java
+        "alipay-sdk-java"        : "com.alipay.sdk:alipay-sdk-java:3.4.27.ALL"
 ]
